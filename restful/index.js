@@ -12,7 +12,7 @@ const server = http.createServer((req,res) =>{
   const parsedUrl = url.parse(req.url,true)
   //Get the path
   const path = parsedUrl.pathname
-  const trimedPath = path.replace(/^\/+|\/+$/g, '')
+  const trimmedPath = path.replace(/^\/+|\/+$/g, '')
 
   // Get the query string as an object
   const queryStringObject = parsedUrl.query
@@ -33,10 +33,35 @@ const server = http.createServer((req,res) =>{
   req.on('end', () => {
     buffer += decoder.end();
 
-      // Send response
-      res.end('Hello World\n')
-      // Log the request path -> to start in terminal curl localhost:5000/foo
-    console.log(`Req receives with these payload:`, buffer) //to read post body in postman
+      //Choose the handler this request should go to. If one is not found use to notFound handler
+      const chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound
+
+      //Construct the data object to send to the handler
+      const data = {
+        'trimmedPath': trimmedPath,
+        'queryStringObject': queryStringObject,
+        'method': method,
+        'headers': headers,
+        'payload': buffer
+      }
+      //route the request to the handler specified in the router
+      chosenHandler(data, (statusCode, payload) => {
+        //Use the status code called back by the handler or default to 200
+        statusCode = typeof(statusCode) == 'number' ? statusCode : 200
+        //Use the payload by the handler or default to empty object
+        payload = typeof(payload) == 'object' ? payload : {}
+        //convert the payload to a string
+        const payloadString = JSON.stringify(payload)
+        //Return the response
+        res.setHeader('Content-Type', 'application/json')
+        res.writeHead(statusCode)
+        res.end(payloadString)
+
+        // Log the request path 
+        console.log(`Returning this response`, statusCode, payloadString)
+      })
+
+
   })
 
 
@@ -46,3 +71,20 @@ const server = http.createServer((req,res) =>{
 server.listen(5000, () => {
   console.log('Server is listening on Port 5000 now')
 })
+
+//Define the handlers
+const handlers = {};
+//Sample handler
+handlers.sample = (data, callback) => {
+  //Callback a http status code and a payload object
+  callback(406, {'name': 'sample handler'})
+}
+
+//Not found handler
+handlers.notFound = (data, callback) => {
+  callback(404)
+}
+//Define a request router
+const router = {
+  'sample': handlers.sample
+}
