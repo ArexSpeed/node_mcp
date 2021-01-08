@@ -2,10 +2,21 @@
 
 // Dependencies
 const http = require('http')
+const url = require('url')
 
 // The server respond to all request with a string
 const server = http.createServer((req,res) =>{
+
+  //Get the URL and parse it
+  const parsedUrl = url.parse(req.url,true)
+  //Get the path
+  const path = parsedUrl.pathname
+  const trimedPath = path.replace(/^\/+|\/+$/g, '')
+
+  // Send response
   res.end('Hello World\n')
+  // Log the request path -> to start in terminal curl localhost:5000/foo
+  console.log(`Request received on path ${trimedPath}` )
 })
 
 //Start the server, and have it listen on port 5000
