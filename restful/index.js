@@ -8,6 +8,7 @@ const StringDecoder = require('string_decoder').StringDecoder
 const config = require('./config')
 const fs = require('fs')
 const test = require('./testing')
+const handlers = require('./lib/handlers')
 
 
 // test('create','test', 'newFile', {'foo': 'bar'}, (err) => {
@@ -98,19 +99,9 @@ const unifiedServer = (req,res) => {
     })
 }
 
-//Define the handlers
-const handlers = {};
 
-// Ping handlers
-handlers.ping = (data, callback) => {
-  callback(200)
-}
-
-//Not found handler
-handlers.notFound = (data, callback) => {
-  callback(404)
-}
 //Define a request router
 const router = {
-  'ping': handlers.ping
+  'ping': handlers.ping,
+  'users': handlers.users
 }
