@@ -69,7 +69,7 @@ const handlers = {};
 
 // Ping handlers
 handlers.hello = (data, callback) => {
-  callback(200)
+  callback(200, {'text':'Hello World'})
 }
 
 //Not found handler
@@ -78,5 +78,5 @@ handlers.notFound = (data, callback) => {
 }
 //Define a request router
 const router = {
-  'ping': handlers.ping
+  'hello': handlers.hello
 }
