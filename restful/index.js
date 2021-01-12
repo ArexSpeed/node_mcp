@@ -7,6 +7,14 @@ const url = require('url')
 const StringDecoder = require('string_decoder').StringDecoder
 const config = require('./config')
 const fs = require('fs')
+const test = require('./testing')
+
+
+// test('create','test', 'newFile', {'foo': 'bar'}, (err) => {
+//      console.log('this was the error',err)})
+test('read','test', 'newFile', (err, data) => {
+      console.log('this was the error',err, 'with data: ', data)})
+
 
 // The server respond to all request with a string
 const httpServer = http.createServer((req,res) =>{
