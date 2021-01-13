@@ -14,8 +14,8 @@ const helpers = require('./lib/helpers')
 
 // test('create','test', 'newFile', {'foo': 'bar'}, (err) => {
 //      console.log('this was the error',err)})
-test('read','test', 'newFile', (err, data) => {
-      console.log('this was the error',err, 'with data: ', data)})
+// test('read','test', 'newFile', (err, data) => {
+//       console.log('this was the error',err, 'with data: ', data)})
 
 
 // The server respond to all request with a string
@@ -104,5 +104,6 @@ const unifiedServer = (req,res) => {
 //Define a request router
 const router = {
   'ping': handlers.ping,
-  'users': handlers.users
+  'users': handlers.users,
+  'tokens': handlers.tokens
 }
