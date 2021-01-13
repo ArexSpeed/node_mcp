@@ -9,6 +9,7 @@ const config = require('./config')
 const fs = require('fs')
 const test = require('./testing')
 const handlers = require('./lib/handlers')
+const helpers = require('./lib/helpers')
 
 
 // test('create','test', 'newFile', {'foo': 'bar'}, (err) => {
@@ -76,7 +77,7 @@ const unifiedServer = (req,res) => {
           'queryStringObject': queryStringObject,
           'method': method,
           'headers': headers,
-          'payload': buffer
+          'payload': helpers.parseJsonToObject(buffer)
         }
         //route the request to the handler specified in the router
         chosenHandler(data, (statusCode, payload) => {

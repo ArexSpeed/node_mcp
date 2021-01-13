@@ -1,10 +1,19 @@
 // Helpers for various tasks
 //Dependecies
 const crypto = require('crypto')
-const config = require('./config')
+const config = require('../config')
 
 // Container for all the helpers
 const helpers = {}
+
+// Parse a JSON string to an object in all cases without throwing
+helpers.parseJsonToObject = (str) => {
+  try {
+    const obj = JSON.parse(str)
+  } catch (error) {
+    return {}
+  }
+}
 
 //Create a SHA256 hash
 helpers.hash = (str)=>{
@@ -15,5 +24,7 @@ helpers.hash = (str)=>{
     return false
   }
 }
+
+
 
 module.exports = helpers
