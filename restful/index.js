@@ -17,6 +17,11 @@ const helpers = require('./lib/helpers')
 // test('read','test', 'newFile', (err, data) => {
 //       console.log('this was the error',err, 'with data: ', data)})
 
+// send sms
+// helpers.sendTwilioSms('4151231232', 'Hello', (err) => {
+//   console.log(`Error: ${err}`)
+// })
+
 
 // The server respond to all request with a string
 const httpServer = http.createServer((req,res) =>{
