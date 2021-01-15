@@ -4,7 +4,6 @@
  */
 
 // Dependencies
-const { config } = require('process');
 const _data = require('./data');
 const helpers = require('./helpers');
 const config = require('../config')
