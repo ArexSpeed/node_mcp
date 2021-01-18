@@ -3,10 +3,13 @@
 const path = require('path')
 const fs = require('fs')
 const _data = require('./data')
-const https = requrie('https')
+const https = require('https')
 const http = require('http')
 const helpers = require('./helpers')
 const url = require('url')
+const _logs = require('./logs')
+const { callbackify } = require('util')
+const lib = require('./data')
 
 //Instantiate wokers
 const workers = {}
@@ -139,6 +142,9 @@ workers.processCheckOutcome = (originalCheckData,checkOutcome) => {
   newCheckData.state = state;
   newCheckData.lastChecked = Date.now();
 
+  //Log the outcome
+  const timeOfCheck = Date.now()
+
   // Save the updates
   _data.update('checks',newCheckData.id,newCheckData,(err) => {
     if(!err){
@@ -166,11 +172,74 @@ workers.alertUserToStatusChange = (newCheckData) => {
   });
 };
 
+workers.log = (originalCheckData,checkOutcome,state, alertWarranted, timeOfCheck) => {
+  // Form the log data
+  const logData = {
+    'check': originalCheckData,
+    'outcome': checkOutcome,
+    'state': state,
+    'alert': alertWarranted,
+    'time': timeOfCheck
+  }
+  //Convert data to a string
+  const logString = JSON.stringify(logData)
+
+  //Determine the name of the log file
+  const logFileName = originalCheckData.id;
+
+  //Append the log string to the file
+  _logs.append(logFileName,logString,(err) => {
+    if(!err){
+      console.log('Logginf to the file succeded')
+    }else{
+      console.log('Logging to file failed')
+    }
+  })
+}
 //Timer execute the worker-process once per minute
 workers.loop = () => {
   setInterval(() => {
     workers.gatherAllChecks()
   },1000*60)
+}
+
+// Rotate (compress) the log files
+workers.rotateLogs = () => {
+  //List all the (non compressed) log files
+  _logs.list(false,(err, logs) => {
+    if(!err && logs && logs.length > 0){
+      logs.forEach((logName) => {
+        //Compress the data to a diffrent file
+        const logId = logName.replace('.log', '')
+        const newFileId = logId+'-'+Date.now()
+        _logs.compress(logId, newFileId, (err) => {
+          if(!err){
+            //Truncate the log
+            _logs.truncate(logId, (err) => {
+              if(!err){
+                console.log("Success truncating logFile")
+              }else{
+                console.log('Error truncating logFile')
+              }
+            })
+          }else{
+            console.log('Error compressing one of the log files', err)
+          }
+        })
+      })
+    }else{
+      callback('Error: could not find any logs to rotate')
+    }
+  })
+}
+
+
+
+//Timer to execute the logrotation process once per day
+workers.logRotatationLoop = () => {
+  setInterval(() => {
+    workers.rotateLogs()
+  }, 1000*60*60*24)
 }
 
 //Init script 
@@ -180,6 +249,12 @@ workers.init = () => {
 
   // Call the loop so the checks will execute later on
   workers.loop()
+
+  //Compress all the log immediately
+  workers.rotateLogs();
+
+  //Call the compression loop will be compressed later on
+  workers.logRotatationLoop();
 }
 
 module.exports = workers
