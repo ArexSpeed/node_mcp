@@ -10,6 +10,8 @@ const url = require('url')
 const _logs = require('./logs')
 const { callbackify } = require('util')
 const lib = require('./data')
+const util = require('util')
+const debug = util.debuglog('workers')
 
 //Instantiate wokers
 const workers = {}
@@ -244,6 +246,9 @@ workers.logRotatationLoop = () => {
 
 //Init script 
 workers.init = () => {
+  //Send to console, in yellow
+  console.log('\x1b[33m%s\x1b[0m','Background workers are running');
+
   //Execute all the checks immediately
   workers.gatherAllChecks()
 

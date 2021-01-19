@@ -138,5 +138,5 @@ lib.truncate = (logId,callback) => {
 
 
 //Export
-module.exports = lub;
+module.exports = lib;
 

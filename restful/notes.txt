@@ -1,0 +1,4 @@
+change color f.e console.log('\x1b[33m%s\x1b[0m','Background workers are running'); -> Could be better with npm colors
+Check debuging for file
+NODE_DEBUG=workers node index.js
+replace console.log to debug
