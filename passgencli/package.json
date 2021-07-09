@@ -1,0 +1,19 @@
+{
+  "name": "passgencli",
+  "version": "1.0.0",
+  "description": "Password generator in Cli",
+  "main": "index.js",
+  "preferGlobal": true,
+  "bin": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "AC",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "clipboardy": "^2.3.0",
+    "commander": "^8.0.0",
+    "link": "^0.1.5"
+  }
+}
