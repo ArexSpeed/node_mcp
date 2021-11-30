@@ -7,8 +7,8 @@ const app = express();
 const connectDB = require('./db/connect');
 
 //routers
-const authRouter = requrie('./routes/auth');
-const jobsRouter = requrie('./routes/jobs');
+const authRouter = require('./routes/auth');
+const jobsRouter = require('./routes/jobs');
 
 // error handler
 const notFoundMiddleware = require('./middleware/not-found');
