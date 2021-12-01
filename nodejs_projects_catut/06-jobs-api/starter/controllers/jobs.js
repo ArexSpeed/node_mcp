@@ -7,7 +7,7 @@ const getJob = async (req, res) => {
 }
 
 const createJob = async (req, res) => {
-  res.send('create job');
+  res.json(req.user); // req.user get from middleware authentication
 }
 const updateJob = async (req, res) => {
   res.send('update job');
