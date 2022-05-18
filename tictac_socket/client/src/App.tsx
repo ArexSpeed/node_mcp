@@ -1,25 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import styled from "styled-components";
 import './App.css';
+import { io } from "socket.io-client";
+
+const AppContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+`;
 
 function App() {
+
+  const connect = () => {
+    const socket = io("http://localhost:9000");
+    console.log(socket, 'socket');
+    socket.on("connect", () => {
+      socket.emit("custom_event", { name: "Alex", age: 25 })
+    })
+  }
+
+  useEffect(() => {
+    connect();
+    console.log("connect");
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContainer>
+      <h1>Welcome to Tic-Tac-Toe</h1>
+    </AppContainer>
   );
 }
 
