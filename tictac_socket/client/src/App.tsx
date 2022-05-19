@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import socketService from './services/socketService';
 import JoinRoom from './components/joinRoom';
 import GameContext, { IGameContextProps } from './gameContext';
+import Game from './components/game';
 
 const AppContainer = styled.div`
   width: 100%;
@@ -31,7 +32,7 @@ function App() {
 
   const connectSocket = async () => {
     const socket = socketService
-    .connect("http://localhost:9000")
+    .connect("http://localhost:9000/")
     .catch((err) => {
       console.log("Error: ", err)
     });
@@ -53,7 +54,8 @@ function App() {
       <AppContainer>
         <WelcomeText>Welcome to Tic-Tac-Toe</WelcomeText>
         <MainContainer>
-          <JoinRoom />
+          {!isInRoom && <JoinRoom />}
+          {isInRoom && <Game />}
         </MainContainer>
       </AppContainer>
     </GameContext.Provider>

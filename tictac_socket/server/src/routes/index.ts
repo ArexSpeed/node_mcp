@@ -4,7 +4,10 @@ const router = express.Router();
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.send("Hello Boy!!");
+  console.log("start router");
+  res.json({
+    "name": "Arek"
+  });
 });
 
 module.exports = router;
